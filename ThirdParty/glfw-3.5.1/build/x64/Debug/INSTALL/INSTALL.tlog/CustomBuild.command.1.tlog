@@ -1,0 +1,10 @@
+^D:\DEV\GLFW\GLFW-3.5.1\BUILD\CMAKEFILES\C4AEDEDA30C5581D79479C27CD1C6DA6\INSTALL_FORCE.RULE
+setlocal
+cd .
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

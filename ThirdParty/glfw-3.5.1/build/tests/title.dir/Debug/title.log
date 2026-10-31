@@ -1,0 +1,4 @@
+﻿  Building Custom Rule D:/dev/glfw/glfw-3.5.1/tests/CMakeLists.txt
+  title.c
+D:\dev\glfw\glfw-3.5.1\tests\title.c(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+  title.vcxproj -> D:\dev\glfw\glfw-3.5.1\build\tests\Debug\title.exe

@@ -1,0 +1,8 @@
+D:/dev/glfw/lib/glfw3.lib
+D:/dev/glfw/include/GLFW/glfw3.h
+D:/dev/glfw/include/GLFW/glfw3native.h
+D:/dev/glfw/lib/cmake/glfw3/glfw3Config.cmake
+D:/dev/glfw/lib/cmake/glfw3/glfw3ConfigVersion.cmake
+D:/dev/glfw/lib/cmake/glfw3/glfw3Targets.cmake
+D:/dev/glfw/lib/cmake/glfw3/glfw3Targets-debug.cmake
+D:/dev/glfw/lib/pkgconfig/glfw3.pc

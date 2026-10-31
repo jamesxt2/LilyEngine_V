@@ -1,0 +1,11 @@
+﻿  1>
+  -- Install configuration: "Debug"
+  -- Installing: D:/dev/glfw/lib/glfw3.lib
+  -- Installing: D:/dev/glfw/include/GLFW
+  -- Installing: D:/dev/glfw/include/GLFW/glfw3.h
+  -- Installing: D:/dev/glfw/include/GLFW/glfw3native.h
+  -- Installing: D:/dev/glfw/lib/cmake/glfw3/glfw3Config.cmake
+  -- Installing: D:/dev/glfw/lib/cmake/glfw3/glfw3ConfigVersion.cmake
+  -- Installing: D:/dev/glfw/lib/cmake/glfw3/glfw3Targets.cmake
+  -- Installing: D:/dev/glfw/lib/cmake/glfw3/glfw3Targets-debug.cmake
+  -- Installing: D:/dev/glfw/lib/pkgconfig/glfw3.pc

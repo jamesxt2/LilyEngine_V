@@ -1,0 +1,7 @@
+# Directories
+.vs/
+Code/out/
+Code/.vs/
+
+# Files
+*.user
