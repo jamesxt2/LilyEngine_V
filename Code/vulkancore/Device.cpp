@@ -1,4 +1,5 @@
 #include "Device.h"
+#include "Device.h"
 
 namespace LEV::vulkancore {
 
@@ -6,10 +7,12 @@ namespace LEV::vulkancore {
 		: mInstance(instance), mSurface(surface)
 	{
 		pickPhysicalDevice();
+		createLogicalDevice();
 	}
 
 	Device::~Device()
 	{
+		vkDestroyDevice(mDevice, nullptr);
 	}
 
 	int Device::rateDeviceSuitability(VkPhysicalDevice device)
@@ -66,16 +69,20 @@ namespace LEV::vulkancore {
 
 		VkPhysicalDeviceMemoryProperties memProps;
 		vkGetPhysicalDeviceMemoryProperties(device, &memProps);
+		int memorySize = 0;
 		for (uint32_t i = 0; i < memProps.memoryHeapCount; ++i)
 		{
 			if (memProps.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT)
 				score += static_cast<int>(memProps.memoryHeaps[i].size
 					/ (1024 * 1024 * 1024)) * 100;
+			memorySize += static_cast<int>(memProps.memoryHeaps[i].size
+				/ (1024 * 1024 * 1024));
 		}
+		std::cout << props.deviceName << " size: " << memorySize << "GB" << std::endl;
 		return score;
 	}
 
-	void Device::queryQueueFamilies(VkPhysicalDevice device)
+	void Device::initQueueFamilies(VkPhysicalDevice device)
 	{
 		mGraphicQueueFamily = std::nullopt;
 		mPresentQueueFamily = std::nullopt;
@@ -122,7 +129,7 @@ namespace LEV::vulkancore {
 			{
 				highestScore = score;
 				bestDevice = device;
-				queryQueueFamilies(device);
+				initQueueFamilies(device);
 			}
 		}
 
@@ -139,5 +146,44 @@ namespace LEV::vulkancore {
 	bool Device::isQueueFamilyComplete()
 	{
 		return mGraphicQueueFamily.has_value() && mPresentQueueFamily.has_value();
+	}
+
+	void Device::createLogicalDevice()
+	{
+		// get queue family indices
+		std::set<uint32_t> uniqueFamilies = {
+			mGraphicQueueFamily.value(),
+			mPresentQueueFamily.value()
+		};
+
+		float priority = 1.0f;
+		std::vector<VkDeviceQueueCreateInfo> queueCIs;
+		for (uint32_t family : uniqueFamilies)
+		{
+			VkDeviceQueueCreateInfo ci{};
+			ci.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+			ci.queueFamilyIndex = family;
+			ci.queueCount = 1;
+			ci.pQueuePriorities = &priority;
+			queueCIs.push_back(ci);
+		}
+
+		// feature only what we need in part1
+		VkPhysicalDeviceFeatures features{};
+		features.samplerAnisotropy = VK_TRUE;
+
+		VkDeviceCreateInfo ci{};
+		ci.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+		ci.queueCreateInfoCount = static_cast<uint32_t>(queueCIs.size());
+		ci.pQueueCreateInfos = queueCIs.data();
+		ci.pEnabledFeatures = &features;
+		ci.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
+		ci.ppEnabledExtensionNames = deviceExtensions.data();
+
+		if (vkCreateDevice(mPhysicalDevice, &ci, nullptr, &mDevice) != VK_SUCCESS)
+			throw std::runtime_error("Error: failed to create logical device!");
+
+		vkGetDeviceQueue(mDevice, mGraphicQueueFamily.value(), 0, &mGraphicQueue);
+		vkGetDeviceQueue(mDevice, mPresentQueueFamily.value(), 0, &mPresentQueue);
 	}
 }
